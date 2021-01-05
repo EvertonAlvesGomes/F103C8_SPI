@@ -134,6 +134,13 @@ int main(void)
 	  //requestRegister[0] = 0x00;
 	  receivedRegister[0] = 3;
 	  //HAL_SPI_Transmit(&hspi1, (uint8_t*)requestRegister, 1, HAL_MAX_DELAY);
+	  /*
+	   * IMPORTANT NOTE: If you want to read slave data, you can just use
+	   * HAL_SPI_Receive function. For example, if it's desired to read
+	   * a register which address is 0x05, store this value on array buffer
+	   * reception and the function will automatically read the data and
+	   * update the array.
+	   */
 	  HAL_SPI_Receive(&hspi1, (uint8_t*)receivedRegister, 1, HAL_MAX_DELAY);
 //	  HAL_SPI_TransmitReceive(&hspi1, (uint8_t*)requestRegister,
 //			  (uint8_t*)receivedRegister, 1, HAL_MAX_DELAY);

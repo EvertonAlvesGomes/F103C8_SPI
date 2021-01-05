@@ -92,8 +92,10 @@ int main(void)
 {
   /* USER CODE BEGIN 1 */
 	char buff_data[100];
+	char requestRegister[1];
+	char receivedRegister[1];
 	char *content = "TesteWriteToSlaveSPI\n";
-	char received[2];
+	char received[100];
 	char command_read = 0;	//If command_read = 1, master requests data from slave
 
   /* USER CODE END 1 */
@@ -118,7 +120,7 @@ int main(void)
   MX_GPIO_Init();
   MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
-
+  strcpy(received, "                     ");
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -129,22 +131,30 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 	  //Sending data to slave
-	  strcpy(buff_data,content);
-	  HAL_SPI_Transmit(&hspi1, (uint8_t*)buff_data, strlen(content), HAL_MAX_DELAY);
+	  //requestRegister[0] = 0x00;
+	  receivedRegister[0] = 3;
+	  //HAL_SPI_Transmit(&hspi1, (uint8_t*)requestRegister, 1, HAL_MAX_DELAY);
+	  HAL_SPI_Receive(&hspi1, (uint8_t*)receivedRegister, 1, HAL_MAX_DELAY);
+//	  HAL_SPI_TransmitReceive(&hspi1, (uint8_t*)requestRegister,
+//			  (uint8_t*)receivedRegister, 1, HAL_MAX_DELAY);
 
-	  HAL_Delay(50);	//50ms delay was added for ensure the execution of all transmissions
 
-	  //Reading data from slave
-
-	  command_read = 'r';
-	  buff_data[0] = command_read;
-	  buff_data[1] = '\n';	//new line character indicates end of frame
-	  HAL_SPI_Transmit(&hspi1, (uint8_t*)buff_data, (1 + sizeof command_read), HAL_MAX_DELAY);
-	  received[0] = '1';
-	  received[1] = '2';
-	  if(HAL_SPI_Receive(&hspi1, (uint8_t*)received, 1, HAL_MAX_DELAY) == HAL_OK) {
-		  puts(received);
-	  }
+//	  strcpy(buff_data,content);
+//	  HAL_SPI_Transmit(&hspi1, (uint8_t*)buff_data, strlen(content), HAL_MAX_DELAY);
+//
+//	  HAL_Delay(50);	//50ms delay was added for ensure the execution of all transmissions
+//
+//	  //Reading data from slave
+//
+//	  command_read = 'r';
+//	  buff_data[0] = command_read;
+//	  buff_data[1] = '\n';	//new line character indicates end of frame
+//	  HAL_SPI_Transmit(&hspi1, (uint8_t*)buff_data, (1 + sizeof command_read), HAL_MAX_DELAY);
+//	  //received[0] = '1';
+//	  //received[1] = '2';
+//	  if(HAL_SPI_Receive(&hspi1, (uint8_t*)received, 50, HAL_MAX_DELAY) == HAL_OK) {
+//		  puts(received);
+//	  }
   }
   /* USER CODE END 3 */
 }
